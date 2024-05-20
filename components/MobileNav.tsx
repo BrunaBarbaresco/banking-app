@@ -21,7 +21,9 @@ const MobileNav = () => {
   return (
     <section>
       <Sheet>
-        <SheetTrigger>Open</SheetTrigger>
+        <SheetTrigger>
+          <Image src="/icons/hamburger.svg" alt="menu" height={20} width={20} />
+        </SheetTrigger>
         <SheetContent side="left" className="border-none bg-white ">
           <Link
             href="/"
