@@ -195,7 +195,60 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
-export const authFormSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});
+export const authFormSchema = (type: string) =>
+  z.object({
+    //sign up
+    firstName:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string({ required_error: "Por favor, preencha seu nome." })
+            .min(3, { message: "O nome deve ao menos 3 caratéres." }),
+    lastName:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string({ required_error: "Por favor, preencha seu sobrenome." })
+            .min(3, { message: "O sobrenome deve ao menos 3 caratéres." }),
+    address1:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string({ required_error: "Por favor, preencha seu endereço." })
+            .max(50, {
+              message: "Seu endereço deve conter até 50 caractéres.",
+            }),
+    state:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string({ required_error: "Por favor, preencha seu estado." })
+            .min(3),
+    postalCode:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string({ required_error: "Por favor, preencha seu CEP." })
+            .min(3, { message: "O código postal deve ao menos 3 caratéres." })
+            .max(8, { message: "O nome deve conter até 8 caratéres." }),
+    birthDate:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string({
+              required_error: "Por favor, preencha sua data de nascimento.",
+            })
+            .min(3, { message: "O código postal deve ao menos 3 caratéres." }),
+    document:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string({ required_error: "Por favor, preencha seu CPF." })
+            .min(11, { message: "Seu cpf deve conter 11 dígitos." })
+            .max(11, { message: "Seu cpf deve conter 11 dígitos." }),
+    //both
+    email: z.string().email({ message: "Por favor informe um e-mail válido." }),
+    password: z
+      .string()
+      .min(8, { message: "Insira uma senha com ao menos 8 caratéres." }),
+  });
