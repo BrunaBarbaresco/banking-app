@@ -12,8 +12,11 @@ import { Form } from "@/components/ui/form";
 import CustomInput from "./CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,11 +30,43 @@ const AuthForm = ({ type }: { type: string }) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    console.log(values);
-    setIsLoading(false);
-  }
+
+    const userData = {
+      firstName: data.firstName!,
+      lastName: data.lastName!,
+      address1: data.address1!,
+      state: data.state!,
+      city: data.city!,
+      postalCode: data.postalCode!,
+      birthDate: data.birthDate!,
+      document: data.document!,
+      email: data.email!,
+      password: data.password!,
+    };
+
+    try {
+      if (type === "sign-up") {
+        const newUser = await signUp(userData);
+        setUser(newUser);
+      }
+
+      if (type === "sign-in") {
+        const response = await signIn({
+          email: data.email,
+          password: data.password,
+        });
+
+        if (response) {
+          router.push("/");
+        }
+      }
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section className="auth-form">
@@ -89,6 +124,12 @@ const AuthForm = ({ type }: { type: string }) => {
                     name="address1"
                     label="Endereço"
                     placeholder="Insira o seu endereço"
+                  />
+                  <CustomInput
+                    control={form.control}
+                    name="city"
+                    label="Cidade"
+                    placeholder="Insira a sua cidade"
                   />
                   <div className="flex gap-4">
                     <CustomInput
