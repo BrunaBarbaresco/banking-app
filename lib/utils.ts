@@ -218,18 +218,29 @@ export const authFormSchema = (type: string) =>
             .max(50, {
               message: "Seu endereço deve conter até 50 caractéres.",
             }),
+    city:
+      type === "sign-in"
+        ? z.string().optional()
+        : z
+            .string({ required_error: "Por favor, preencha sua cidade." })
+            .max(50, {
+              message: "Sua cidade deve conter até 50 caractéres.",
+            }),
     state:
       type === "sign-in"
         ? z.string().optional()
         : z
             .string({ required_error: "Por favor, preencha seu estado." })
-            .min(3),
+            .min(2, { message: "O estado deve conter 2 caratéres." })
+            .max(2, { message: "O estado deve conter 2 caratéres." }),
     postalCode:
       type === "sign-in"
         ? z.string().optional()
         : z
             .string({ required_error: "Por favor, preencha seu CEP." })
-            .min(3, { message: "O código postal deve ao menos 3 caratéres." })
+            .min(3, {
+              message: "O código postal deve conter ao menos 3 caratéres.",
+            })
             .max(8, { message: "O nome deve conter até 8 caratéres." }),
     birthDate:
       type === "sign-in"
